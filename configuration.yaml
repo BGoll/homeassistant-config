@@ -1,0 +1,688 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 295
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  time_zone: Europe/Berlin
+  # Customization file
+  customize: !include customize.yaml
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+recorder:
+  db_url: !secret db_url
+  purge_interval: 7 # run the purging every 100 days
+  purge_keep_days: 3650 # ten years
+
+# my own custom component for grabbing my assets and account balance
+hahabu:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  # api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+device_tracker:
+  - platform: nmap_tracker
+    hosts: 192.168.86.10-255
+    home_interval: 10
+    exclude:
+     - 192.168.86.2
+     - 192.168.86.3
+     - 192.168.86.4
+     - 192.168.86.5
+     - 192.168.86.9
+  - platform: owntracks
+    max_gps_accuracy: 200
+
+zone:
+  - name: Arbeit Beni
+    latitude: !secret latitude_arbeit_beni
+    longitude: !secret longitude_arbeit_beni
+    radius: 700
+    icon: mdi:factory
+
+notify:
+  - name: pushbullet_beni
+    platform: pushbullet
+    api_key: !secret pushbullet_api_key
+
+# Text to speech
+tts:
+  - platform: google
+  
+mqtt:
+  broker: !secret mqtt_broker_host
+  port: !secret mqtt_broker_port
+  certificate: !secret mqtt_broker_ca_file
+  tls_insecure: true
+  client_id: homeassistant
+  
+calendar:
+  - platform: todoist
+    token: !secret todoist_api_key
+    custom_projects:
+      - name: 'All Projects'
+      - name: 'Due Today'
+        due_date_days: 0
+      - name: 'Due This Week'
+        due_date_days: 7
+  
+netatmo:
+  api_key: !secret netatmo_api_key
+  secret_key: !secret netatmo_secret_key
+  username: !secret netatmo_username
+  password: !secret netatmo_password
+  discovery: false
+  
+switch:
+  - platform: mqtt
+    name: "Switch 1"
+    command_topic: "home/bedroom/switch1/set"
+    state_topic: "home/bedroom/switch1/state"
+
+binary_sensor:
+  - platform: mqtt
+    name: Bewässerung Beet 1
+    state_topic: "home/garten/bewaesserung1/state"
+    payload_on: true
+    payload_off: false
+    value_template: '{{value_json.sensorValue}}'
+    
+sensor:
+  - platform: moon
+  - platform: speedtest
+    monitored_conditions:
+      - ping
+      - download      
+      - upload
+  - platform: netatmo
+    station: Zuhause
+    modules:
+      Wohnbereich:
+        - temperature
+        - co2
+        - min_temp
+        - max_temp
+      Büro:
+        - temperature
+        - co2
+        - min_temp
+        - max_temp
+      Garten:
+        - temperature
+        - min_temp
+        - max_temp
+  - platform: template
+    sensors:
+      assets:
+        friendly_name: Vermögen
+        unit_of_measurement: '€'
+        value_template: "{{ states.hahabu.assets.state }}"
+        icon_template: mdi:currency-eur
+      giro_balance:
+        friendly_name: Giro
+        unit_of_measurement: '€'
+        value_template: "{{ states.hahabu.giro_balance.state }}"
+        icon_template: mdi:currency-eur
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: memory_use_percent
+      - type: processor_use
+      - type: since_last_boot
+
+light:
+  - platform: hue
+    host: !secret hue_bridge_host
+
+scene:
+  - name: Sonnenuntergang
+    entities:
+      light.gang_boden:
+        state: on
+        transition: 2
+        brightness: 110
+      light.gang_hangeschrank:
+        state: on
+        transition: 2
+        brightness: 150
+  - name: Buero arbeiten
+    entities:
+        light.buro_11:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_12:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_13:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_14:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_15:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_16:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_21:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_22:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_23:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_24:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_25:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_26:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_31:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_32:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_33:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_34:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_41:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_42:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_43:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_44:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.schminktisch:
+            state: on
+            transition: 1
+            brightness: 180
+            kelvin: 3600
+  - name: Buero TV
+    entities:
+        light.buro_11:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_12:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_13:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_14:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_15:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_16:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_21:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_22:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_23:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_24:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_25:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_26:
+            state: on
+            transition: 2
+            brightness: 130
+            kelvin: 2500
+        light.buro_31:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_32:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_33:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_34:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_41:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_42:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_43:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.buro_44:
+            state: on
+            transition: 2
+            brightness: 30
+            kelvin: 2500
+        light.schminktisch:
+            state: on
+            transition: 2
+            brightness: 20
+            kelvin: 2500
+  - name: Buero TV + arbeiten
+    entities:
+        light.buro_11:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_12:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_13:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_14:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_15:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_16:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_21:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_22:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_23:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_24:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_25:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_26:
+            state: on
+            transition: 1
+            brightness: 130
+            kelvin: 2500
+        light.buro_31:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_32:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_33:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_34:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_41:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_42:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_43:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.buro_44:
+            state: on
+            transition: 1
+            brightness: 255
+            kelvin: 3600
+        light.schminktisch:
+            state: on
+            transition: 2
+            brightness: 20
+            kelvin: 2500
+automation:
+  - alias: Kontostände aktualisieren
+    trigger:
+      platform: time
+      at: '19:30:00'
+    action:
+      service: hahabu.refresh_state
+  - alias: Beni ist bei der Arbeit angekommen
+    trigger:
+      platform: zone
+      entity_id: device_tracker.beni_handy_beni
+      zone: zone.arbeit_beni
+      event: enter
+    action:
+      service: notify.pushbullet_beni
+      data:
+        title: Beni angekommen
+        message: Beni ist bei der Arbeit angekommen
+  - alias: Beni ist bei der Arbeit gegangen
+    trigger:
+      platform: zone
+      entity_id: device_tracker.beni_handy_beni
+      zone: zone.arbeit_beni
+      event: leave
+    action:
+      service: notify.pushbullet_beni
+      data:
+        title: Beni gegangen
+        message: Beni ist bei der Arbeit gegangen
+  - alias: "Media player paused/stopped"
+    trigger:
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        from: 'playing'
+        to: 'paused'
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        from: 'playing'
+        to: 'off'
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        from: 'playing'
+        to: 'idle'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+        service: scene.turn_on
+        entity_id: scene.buero_arbeiten
+  - alias: "Licht im Gang an, wenn wir nach Hause kommen"
+    trigger:
+      - platform: state
+        entity_id: group.location_devices
+        from: 'not_home'
+        to: 'home'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+        service: scene.turn_on
+        entity_id: scene.sonnenuntergang
+
+  - alias: "Media player playing"
+    trigger:
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        to: 'playing'
+        from: 'off'
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        to: 'playing'
+        from: 'paused'
+      - platform: state
+        #entity_id: media_player.buro_2
+        entity_id: media_player.buro
+        to: 'playing'
+        from: 'idle'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+        service: scene.turn_on
+        entity_id: scene.buero_tv
+  - alias: "Sonnenuntergang"
+    trigger:
+      platform: sun
+      event: sunset
+      offset: "-00:30:00"
+    condition:
+      condition: state
+      entity_id: group.location_devices
+      state: home
+    action:
+      service: homeassistant.turn_on
+      entity_id: scene.sonnenuntergang
+  - alias: "Starte Roberto"
+    trigger:
+      platform: time
+      at: '13:30'
+    condition:
+      condition: time
+      weekday:
+        - mon
+        - wed
+        - fri
+    action:
+        service: vacuum.turn_on
+        entity_id: vacuum.roberto
+  - alias: "Bewässerung Beet 1 starten"
+    trigger:
+      platform: state
+      entity_id: binary_sensor.bewasserung_beet_1
+      to: "on"
+      from: "off"
+    #condition:
+    #  condition: state
+    #  entity_id: group.all_devices
+    #  state: home
+    action:
+      service: mqtt.publish
+      data:
+        topic: "home/garten/bewaesserung1/command"
+        #payload: {"command": "start"}
+        payload: Test start
+  - alias: "Bewässerung Beet 1 beenden"
+    trigger:
+      platform: state
+      entity_id: binary_sensor.bewasserung_beet_1
+      to: "off"
+      from: "on"
+    #condition:
+    #  condition: state
+    #  entity_id: group.all_devices
+    #  state: home
+    action:
+      service: mqtt.publish
+      data:
+        topic: "home/garten/bewaesserung1/command"
+        #payload: {"command": "stop"}
+        payload: Test stop
+
+history_graph:
+  temperature_garten:
+    name: Temperatur Garten
+    entities:
+      - sensor.netatmo_garten_temperature
+  temperature_wohnbereich:
+    name: Temperatur Wohnbereich
+    entities:
+      - sensor.netatmo_wohnbereich_temperature
+  co2_wohnbereich:
+    name: CO2 Wohnbereich
+    entities:
+      - sensor.netatmo_wohnbereich_co2
+  temperature_buero:
+    name: Temperatur Büro
+    entities:
+      - sensor.netatmo_buro_temperature
+  co2_buero:
+    name: CO2 Büro
+    entities:
+      - sensor.netatmo_buro_co2
+
+vacuum:
+  - platform: xiaomi_miio
+    name: Roberto
+    host: !secret xiaomi_robot_host
+    token: !secret xiaomi_robot_token
+
+group: !include groups.yaml
+#automation: !include automations.yaml
+script: !include scripts.yaml

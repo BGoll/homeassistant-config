@@ -1,0 +1,124 @@
+##### VIEWS #####
+  default_view:
+    view: yes
+    entities:
+      - group.umgebung
+      - calendar.due_today
+      - device_tracker.beni_handy_beni
+      - device_tracker.corinna_handy_corinna
+      - sensor.moon
+      - sensor.giro_balance
+      - sensor.assets
+      - group.speedtest
+  buero_view:
+    view: yes
+    name: Büro
+    entities:
+      - history_graph.temperatur_buro
+      - history_graph.co2_buro
+      - scene.buero_arbeiten
+      - scene.buero_tv
+      - scene.buero_tv__arbeiten
+      - group.buero_123
+      - media_player.buro
+      - media_player.buro_2
+  wohnbereich_view:
+    view: yes
+    name: Wohnbereich
+    entities:
+      - history_graph.temperatur_wohnbereich
+      - history_graph.co2_wohnbereich
+      - group.wohnbereich
+      - vacuum.roberto
+      - media_player.wohnzimmer
+      - media_player.wohnzimmer_2
+      - media_player.wohnzimmer_3
+  gang_view:
+    view: yes
+    name: Gang
+    entities:
+      - group.gang
+  schlafzimmer_view:
+    view: yes
+    name: Schlafzimmer
+    entities:
+      - group.schlafzimmer
+  garten_view:
+    view: yes
+    name: Garten
+    entities:
+      - history_graph.temperatur_garten
+      - switch.switch_1
+      - binary_sensor.bewasserung_beet_1
+  system_view:
+    view: yes
+    name: System
+    entities:
+      - group.system
+
+##### GROUPS #####
+  buero_123:
+    name: Buero
+    entities:
+      - light.buro_11
+      - light.buro_12
+      - light.buro_13
+      - light.buro_14
+      - light.buro_15
+      - light.buro_16
+      - light.buro_21
+      - light.buro_22
+      - light.buro_23
+      - light.buro_24
+      - light.buro_25
+      - light.buro_26
+      - light.buro_31
+      - light.buro_32
+      - light.buro_33
+      - light.buro_34
+      - light.buro_41
+      - light.buro_42
+      - light.buro_43
+      - light.buro_44
+      - light.schminktisch
+  gang:
+    name: Gang
+    entities:
+      - light.gang_boden
+      - light.gang_hangeschrank
+  wohnbereich:
+    name: Wohnbereich
+    entities:
+      - light.bogenlampe
+  schlafzimmer:
+    name: Schlafzimmer
+    entities:
+      - light.nachttisch_beni
+  umgebung:
+    name: Umgebung
+    entities:
+      - sensor.netatmo_garten_temperature
+      - sensor.netatmo_wohnbereich_temperature
+      - sensor.netatmo_wohnbereich_co2
+      - sensor.netatmo_buro_temperature
+      - sensor.netatmo_buro_co2
+      - sensor.yr_symbol
+      - sun.sun
+  speedtest:
+    name: Speedtest
+    entities:
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.speedtest_ping
+  system:
+    name: System
+    entities:
+      - sensor.cpu_used
+      - sensor.disk_used_
+      - sensor.ram_used
+      - sensor.since_last_boot
+  location_devices:
+    name: Location Devices
+    entities:
+      - device_tracker.beni_handy_beni
+      - device_tracker.corinna_handy_corinna
