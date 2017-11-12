@@ -1,0 +1,26 @@
+media_player.buro:
+  friendly_name: "B\xFCro GH"
+media_player.buro_2:
+  friendly_name: "B\xFCro CC"
+group.buero_view:
+  hidden: true
+media_player.karl_wohnzimmer:
+  hidden: true
+sensor.netatmo_buro_co2:
+  friendly_name: "B\xFCro CO2"
+  icon: mdi:periodic-table-co2
+sensor.netatmo_buro_temperature:
+  friendly_name: "B\xFCro Temperatur"
+sensor.netatmo_garten_temperature:
+  friendly_name: Garten Temperatur
+sensor.netatmo_wohnbereich_temperature:
+  friendly_name: Wohnbereich Temperatur
+sensor.netatmo_wohnbereich_co2:
+  friendly_name: Wohnbereich CO2
+  icon: mdi:periodic-table-co2
+group.buero:
+  hidden: true
+automation.media_player_playing:
+  hidden: true
+automation.media_player_pausedstopped:
+  hidden: true
