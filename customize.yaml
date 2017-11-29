@@ -24,3 +24,7 @@ automation.media_player_playing:
   hidden: true
 automation.media_player_pausedstopped:
   hidden: true
+climate.thermostat_buero:
+  friendly_name: "Thermostat B\xFCro"
+climate.thermostat_wohnbereich:
+  friendly_name: "Thermostat Wohnbereich"

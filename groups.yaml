@@ -20,6 +20,7 @@
       - scene.buero_tv
       - scene.buero_tv__arbeiten
       - group.buero_123
+      - climate.thermostat_buero
       - media_player.buro
       - media_player.buro_2
   wohnbereich_view:
@@ -30,6 +31,7 @@
       - history_graph.co2_wohnbereich
       - group.wohnbereich
       - vacuum.roberto
+      - climate.thermostat_wohnbereich
       - media_player.wohnzimmer
       - media_player.wohnzimmer_2
       - media_player.wohnzimmer_3
@@ -50,6 +52,11 @@
       - history_graph.temperatur_garten
       - switch.switch_1
       - binary_sensor.bewasserung_beet_1
+  garage_view:
+    view: yes
+    name: Garage
+    entities:
+      - group.octoprint
   system_view:
     view: yes
     name: System
@@ -122,3 +129,14 @@
     entities:
       - device_tracker.beni_handy_beni
       - device_tracker.corinna_handy_corinna
+  octoprint:
+    name: Octoprint
+    entities:
+      - binary_sensor.octoprint_printing
+      - binary_sensor.octoprint_printing_error
+      - sensor.octoprint_actual_bed_temp
+      - sensor.octoprint_actual_tool0_temp
+      - sensor.octoprint_current_state
+      - sensor.octoprint_job_percentage
+      - sensor.octoprint_target_bed_temp
+      - sensor.octoprint_target_tool0_temp

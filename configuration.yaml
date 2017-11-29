@@ -14,7 +14,7 @@ homeassistant:
 
 # Enables the frontend
 frontend:
-
+  javascript_version: latest
 # Enables configuration UI
 config:
 
@@ -59,6 +59,15 @@ map:
 # Track the sun
 sun:
 
+homematic:
+  hosts:
+    ip:
+      ip: !secret ccu_host
+      port: 2010
+      username: !secret ccu_user
+      password: !secret ccu_password
+      resolvenames: xml
+
 device_tracker:
   - platform: nmap_tracker
     hosts: 192.168.86.10-255
@@ -72,6 +81,9 @@ device_tracker:
   - platform: owntracks
     max_gps_accuracy: 200
 
+climate:
+  platform: homematic
+
 zone:
   - name: Arbeit Beni
     latitude: !secret latitude_arbeit_beni
@@ -83,6 +95,12 @@ notify:
   - name: pushbullet_beni
     platform: pushbullet
     api_key: !secret pushbullet_api_key
+
+octoprint:
+  host: !secret octoprint_host
+  api_key: B1161CB3995C42F59CDBB3DEC0F69724
+  bed: true
+  number_of_tools: 2
 
 # Text to speech
 tts:
@@ -125,6 +143,12 @@ binary_sensor:
     payload_on: true
     payload_off: false
     value_template: '{{value_json.sensorValue}}'
+
+  - platform: octoprint
+    name: octoprint
+    monitored_conditions:
+      - Printing
+      - Printing Error
     
 sensor:
   - platform: moon
@@ -169,6 +193,12 @@ sensor:
       - type: memory_use_percent
       - type: processor_use
       - type: since_last_boot
+  - platform: octoprint
+    name: octoprint
+    monitored_conditions:
+      - Current State
+      - Temperatures
+      - Job Percentage
 
 light:
   - platform: hue
@@ -191,107 +221,107 @@ scene:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_12:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_13:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_14:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_15:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_16:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_21:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_22:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_23:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_24:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_25:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_26:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_31:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_32:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_33:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_34:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_41:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_42:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_43:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_44:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.schminktisch:
             state: on
             transition: 1
             brightness: 180
-            kelvin: 3600
+            kelvin: 3800
   - name: Buero TV
     entities:
         light.buro_11:
@@ -465,42 +495,42 @@ scene:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_32:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_33:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_34:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_41:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_42:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_43:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.buro_44:
             state: on
             transition: 1
             brightness: 255
-            kelvin: 3600
+            kelvin: 3800
         light.schminktisch:
             state: on
             transition: 2
@@ -538,18 +568,18 @@ automation:
   - alias: "Media player paused/stopped"
     trigger:
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         from: 'playing'
         to: 'paused'
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         from: 'playing'
         to: 'off'
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         from: 'playing'
         to: 'idle'
     condition:
@@ -576,18 +606,18 @@ automation:
   - alias: "Media player playing"
     trigger:
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         to: 'playing'
         from: 'off'
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         to: 'playing'
         from: 'paused'
       - platform: state
-        #entity_id: media_player.buro_2
-        entity_id: media_player.buro
+        entity_id: media_player.buro_2
+        #entity_id: media_player.buro
         to: 'playing'
         from: 'idle'
     condition:
@@ -597,6 +627,35 @@ automation:
     action:
         service: scene.turn_on
         entity_id: scene.buero_tv
+
+  - alias: "Bürolicht bei Bewegung an"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.praesenzmelder_buero_presence_detection_state
+        to: 'on'
+        from: 'off'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+        service: light.turn_on
+        entity_id: group.buero_123
+
+  #- alias: "Bürolicht bei fehlender Bewegung aus"
+  #  trigger:
+  #    - platform: state
+  #      entity_id: binary_sensor.praesenzmelder_buero_presence_detection_state
+  #      to: 'off'
+  #      from: 'on'
+    #condition:
+    #  - condition: state
+    #    entity_id: sun.sun
+    #    state: 'below_horizon'
+  #  action:
+  #      service: light.turn_off
+  #      entity_id: group.buero_123
+
   - alias: "Sonnenuntergang"
     trigger:
       platform: sun

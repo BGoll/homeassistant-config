@@ -5,4 +5,8 @@
 secrets.yaml
 known_devices.yaml
 !.travis.yml
+!scripts.yaml
+!Readme.txt
 phue.conf
+*.log
+*.db
